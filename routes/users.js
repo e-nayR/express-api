@@ -1,7 +1,8 @@
 var express = require("express");
 const {getAll, createUser, updateName, detailUser, deleteUser, login, forgetPass, newPass} = require("../src/controllers/users")
 const router = express.Router();
-const {middlewareAuth} = require("../middleware/auth")
+const {middlewareAuth} = require("../middleware/auth");
+const { myComments, commentDel } = require("../src/controllers/comments");
 
 
 // CRUD Routes /users
@@ -11,7 +12,11 @@ router.put('/user',middlewareAuth, updateName);
 router.get('/user', middlewareAuth, detailUser);
 router.delete('/delete',middlewareAuth , deleteUser);
 router.post('/login', login);
-router.post('/user/forget-password',middlewareAuth , forgetPass);
-router.put('/user/new-password', middlewareAuth ,newPass);
+router.post('/user/forget-password',forgetPass);
+router.put('/user/new-password',newPass);
+
+// users/comments
+router.get('/my-comments', middlewareAuth, myComments);
+router.delete('/my-comments/:id', middlewareAuth, commentDel);
 
 module.exports = router;

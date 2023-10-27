@@ -25,9 +25,14 @@ const listTask = async (req, res) => {
       userId: req.userId,
     },
     attributes: ["id", "title", "finished", "createdAt"],
+    include:{
+      model: db.Comment,
+      attributes:['comment']
+    }
   });
+  
   return res.json({
-    My_Tasks: list,
+    My_Tasks: list
   });
 };
 
@@ -62,22 +67,21 @@ const finishFalse = async (req, res) => {
 // edit the task
 const editTask = async (req, res) => {
   const params = req.params.id;
-  const body = req.body;
-
+  const body = req.body
   await db.Task.update(body, {
     where: {
       id: params,
       userId: req.userId,
-    },
+    }
   })
     .then(() => {
       return res.json({
-        message: "task changed",
+        message: "Task atualizada",
       });
     })
     .catch((err) => {
       return res.json({
-        error: "You don't have a task with this id",
+        error: "Você não possui nenhuma task com esse ID",
       });
     });
 };
@@ -85,13 +89,16 @@ const editTask = async (req, res) => {
 // get a especific task
 const detailTask = async (req, res) => {
   const params = req.params.id;
-  const body = req.body;
 
   await db.Task.findOne({
     where: {
       id: params,
       userId: req.userId,
     },
+    include:{
+      model: db.Comment,
+      attributes:['comment']
+    }
   })
     .then((find) => {
       return res.json({
@@ -116,7 +123,7 @@ const deleteTask = async (req, res) => {
   });
   if (id == null) {
     return res.json({
-      error: "task not exist",
+      error: "Essa task não exist",
     });
   }
   await db.Task.destroy({
@@ -127,12 +134,12 @@ const deleteTask = async (req, res) => {
   })
     .then(() => {
       return res.json({
-        message: "task deleted",
+        message: "task apagada",
       });
     })
     .catch((err) => {
       return res.json({
-        error: "It isn't not possible delete this task",
+        error: "Não foi possível excluir essa task",
       });
     });
 };
@@ -165,7 +172,7 @@ const changeStatus = async (req, res) => {
   )
     .then(() => {
       return res.json({
-        message: "task changed",
+        message: "Task atualizada",
       });
     })
     .catch((err) => {

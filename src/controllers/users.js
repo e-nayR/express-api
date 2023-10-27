@@ -8,8 +8,7 @@ const randomStr = require("crypto");
 // list all users
 const getAll = async (req, res) => {
   const list = await db.User.findAll({
-    attributes: ["id", "name"],
-  });
+    attributes: ["id", "name"]});
   res.send(list);
 };
 
@@ -21,7 +20,7 @@ const createUser = async (req, res) => {
     .then((result) => {
       console.log("Created User");
       res.status(201).json({
-        message: "Your was created successfully!",
+        message: "Novo user criado com sucesso!",
         user: result.name,
       });
     })
@@ -43,7 +42,7 @@ const updateName = async (req, res) => {
   )
     .then((changesUsuario) => {
       return res.json({
-        message: "user update successful",
+        message: "User atualizado!",
       });
     })
     .catch(() => {
@@ -63,7 +62,7 @@ const detailUser = async (req, res) => {
   });
   if (user == null) {
     return res.json({
-      user: "this user doesn't exist",
+      user: "Esse user não existe",
     });
   }
   return res.json({
@@ -81,7 +80,7 @@ const deleteUser = async (req, res) => {
   });
   if (user == null) {
     return res.json({
-      message: "this user doesn't exist",
+      message: "Esse user não existe",
     });
   }
   await db.User.destroy({
@@ -91,7 +90,7 @@ const deleteUser = async (req, res) => {
   })
     .then(() => {
       return res.json({
-        message: "user deleted successful",
+        message: "Usuário apagado",
       });
     })
     .catch(() => {
