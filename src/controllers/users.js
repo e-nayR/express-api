@@ -1,15 +1,19 @@
 //requisições
 const db = require("../models/index");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const mailer = require("../../mailtrap/mailer");
 const randomStr = require("crypto");
 
 // list all users
 const getAll = async (req, res) => {
-  const list = await db.User.findAll({
-    attributes: ["id", "name"]});
-  res.send(list);
+  await db.User.findAll({
+    attributes: ["id", "name"],
+  })
+    .then((list) => {
+      res.status(200).json(list);
+    })
+    .catch((err) => {
+      res.status(503).json(err);
+    });
 };
 
 //create a new user
@@ -25,7 +29,7 @@ const createUser = async (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      res.status(422).json(err);
     });
 };
 
@@ -41,13 +45,13 @@ const updateName = async (req, res) => {
     }
   )
     .then((changesUsuario) => {
-      return res.json({
+      return res.status(200).json({
         message: "User atualizado!",
       });
     })
-    .catch(() => {
-      return res.json({
-        message: "error!",
+    .catch((err) => {
+      return res.status(422).json({
+        message: err,
       });
     });
 };
@@ -61,11 +65,11 @@ const detailUser = async (req, res) => {
     },
   });
   if (user == null) {
-    return res.json({
+    return res.status(404).json({
       user: "Esse user não existe",
     });
   }
-  return res.json({
+  return res.status(200).json({
     user: user,
   });
 };
@@ -79,7 +83,7 @@ const deleteUser = async (req, res) => {
     },
   });
   if (user == null) {
-    return res.json({
+    return res.status(404).json({
       message: "Esse user não existe",
     });
   }
@@ -89,145 +93,15 @@ const deleteUser = async (req, res) => {
     },
   })
     .then(() => {
-      return res.json({
+      return res.status(200).json({
         message: "Usuário apagado",
       });
     })
     .catch(() => {
-      return res.json({
+      return res.status(405).json({
         message: "error!",
       });
     });
-};
-
-// LOGIN
-const login = async (req, res) => {
-  const email = req.body.email;
-  const pass = req.body.password;
-
-  if (email && pass) {
-    //valida se existe
-
-    const user = await db.User.findOne({
-      where: {
-        email: email, // chama o user com esse email -> adicionar uma restrição de email tbm!
-      },
-    });
-
-    if (user != null) {
-      if (!(await bcrypt.compare(pass, user.password))) {
-        // compara as senhas
-        return res.json({
-          message: "Error! Credenciais invalidas..",
-        });
-      }
-      const token = jwt.sign({ id: user.id }, "TOKEN1RY4N3UN1C", {
-        expiresIn: "1 h",
-      });
-      return res.json({
-        user: user.name,
-        message: "Você está logado", // caso tudo (email e senha) esteja ok, ele manda um token
-        token: token,
-      });
-    }
-    return res.json({
-      message: "Error! Credenciais invalidas..",
-    });
-  }
-  return res.json({
-    message: "Error! Insira um email e senha..", // caso body seja null ou tenha algum valor diferente de email e senha
-  });
-};
-
-/*enviar email com um token*/
-const forgetPass = async (req, res) => {
-  const email = req.body.email;
-  // return res.send(email)
-  try {
-    const user = await db.User.findOne({
-      where: { email: email },
-    });
-    if (!user) {
-      return res.send({ error: "user not found" });
-    }
-    //return res.send(user)
-
-    const token = randomStr.randomBytes(6).toString("hex");
-    const date = new Date();
-    //date.setHours(date.getHours() + 1);
-    date.setMinutes(date.getMinutes() + 30);
-
-    await db.User.update(
-      {
-        recovery_key: token,
-        timeExpireKey: date,
-      },
-      {
-        where: {
-          id: user.id,
-        },
-      }
-    );
-
-    mailer.sendMail(
-      {
-        to: "ryane.feitosa@catskillet.com",
-        from: "ryane.feitosa@catskillet.com",
-        template: "../mailtrap/mail/forget-password",
-        context: { token },
-      },
-      (err) => {
-        if (err) {
-          res.json({ message: "temos um problema..." });
-        }
-        res.json({ message: "check your emailbox!" });
-      }
-    );
-  } catch {
-    res.send({ error: "try again" });
-  }
-};
-
-/*usar o token para alterar a senha*/
-const newPass = async (req, res) => {
-  const { email, token, newpassword } = req.body;
-  const date = new Date();
-  //return res.send([email,token,newpassword,date])
-  try {
-    const user = await db.User.findOne({
-      where: {
-        email: email,
-      },
-      attributes: ["id", "recovery_key"],
-    });
-    if (!user) {
-      return res.json({ message: "error" });
-    }
-    if (token !== user.recovery_key) {
-      return res.json({ message: "token inválido" });
-    }
-    if (date == user.timeExpireKey) {
-      return res.json({ message: "seu token expirou" });
-    }
-
-    await db.User.update(
-      { password: newpassword },
-      {
-        where: { id: user.id },
-        individualHooks: true,
-      }
-    )
-      .then((changes) => {
-        res.json({
-          message: "senha alterada!",
-        });
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  } catch {
-    res.send({ error: "try again" });
-  }
 };
 
 module.exports = {
@@ -235,8 +109,5 @@ module.exports = {
   createUser,
   updateName,
   detailUser,
-  deleteUser,
-  login,
-  forgetPass,
-  newPass,
+  deleteUser
 };

@@ -7,12 +7,12 @@ const createTask = async (req, res) => {
 
   await db.Task.create(body)
     .then(() => {
-      return res.json({
+      return res.status(201).json({
         message: "new 'To Do' item!",
       });
     })
     .catch((err) => {
-      return res.json({
+      return res.status(401).json({
         message: err,
       });
     });
@@ -31,7 +31,7 @@ const listTask = async (req, res) => {
     }
   });
   
-  return res.json({
+  return res.status(200).json({
     My_Tasks: list
   });
 };
@@ -45,7 +45,7 @@ const finishTrue = async (req, res) => {
     },
     attributes: ["id", "title", "finished"],
   });
-  return res.json({
+  return res.status(200).json({
     Done: list,
   });
 };
@@ -59,7 +59,7 @@ const finishFalse = async (req, res) => {
     },
     attributes: ["id", "title", "finished"],
   });
-  return res.json({
+  return res.status(200).json({
     Do: list,
   });
 };
@@ -75,12 +75,12 @@ const editTask = async (req, res) => {
     }
   })
     .then(() => {
-      return res.json({
+      return res.status(200).json({
         message: "Task atualizada",
       });
     })
     .catch((err) => {
-      return res.json({
+      return res.status(404).json({
         error: "Você não possui nenhuma task com esse ID",
       });
     });
@@ -101,13 +101,13 @@ const detailTask = async (req, res) => {
     }
   })
     .then((find) => {
-      return res.json({
+      return res.status(200).json({
         message: find,
       });
     })
     .catch((err) => {
-      return res.json({
-        error: "404! Task not found",
+      return res.status(404).json({
+        error: "Task not found",
       });
     });
 };
@@ -122,8 +122,8 @@ const deleteTask = async (req, res) => {
     },
   });
   if (id == null) {
-    return res.json({
-      error: "Essa task não exist",
+    return res.status(404).json({
+      error: "Essa task não existe",
     });
   }
   await db.Task.destroy({
@@ -133,12 +133,12 @@ const deleteTask = async (req, res) => {
     },
   })
     .then(() => {
-      return res.json({
+      return res.status(200).json({
         message: "task apagada",
       });
     })
     .catch((err) => {
-      return res.json({
+      return res.status(406).json({
         error: "Não foi possível excluir essa task",
       });
     });
@@ -147,39 +147,45 @@ const deleteTask = async (req, res) => {
 // change if the task is 'done', it's changed to 'to do' - virse versa
 const changeStatus = async (req, res) => {
   const task = req.params.id;
-  const answer = await db.Task.findOne({
-    where: {
-      id: task,
-    },
-    attributes: ["finished"],
-  });
 
-  if (answer.finished == false) {
-    const status = true;
-    answer.finished = status;
-  } else {
-    const status = false;
-    answer.finished = status;
-  }
-
-  await db.Task.update(
-    { finished: answer.finished },
-    {
+  try {
+    const answer = await db.Task.findOne({
       where: {
         id: task,
       },
-    }
-  )
-    .then(() => {
-      return res.json({
-        message: "Task atualizada",
-      });
-    })
-    .catch((err) => {
-      return res.json({
-        error: err,
-      });
+      attributes: ["finished"],
     });
+    
+    if (answer.finished == false) {
+      const status = true;
+      answer.finished = status;
+    } else {
+      const status = false;
+      answer.finished = status;
+    }
+  
+    await db.Task.update(
+      { finished: answer.finished },
+      {
+        where: {
+          id: task,
+        },
+      }
+    )
+      .then(() => {
+        return res.status(200).json({
+          message: "Task atualizada",
+        });
+      })
+      .catch((err) => {
+        return res.status(405).json({
+          error: err,
+        });
+      });
+  } catch (error) {
+    res.status(401).send(error)
+  }
+  
 };
 
 module.exports = {

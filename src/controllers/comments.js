@@ -11,13 +11,13 @@ const commentAdd = async (req, res) => {
     task_id,
   });
 
-  return res.json({ message: "comentário adicionado!" });
+  return res.status(201).json({ message: "comentário adicionado!" });
 };
 
 const commentShow = async (req, res) => {
   const task = await db.Task.findOne({ where: { id: req.params.id } });
   if (!task) {
-   return res.json({ message: "Essa task não existe!" });
+   return res.status(404).json({ message: "Essa task não existe!" });
   }
 
   await db.Comment.findAll({
@@ -26,7 +26,7 @@ const commentShow = async (req, res) => {
     },
     attributes: ["comment"],
   }).then((name) => {
-    return res.json(name);
+    return res.status(200).json(name);
   });
 };
 
@@ -37,14 +37,14 @@ const myComments = async (req, res) => {
     },
     attributes: ["id","comment"],
   }).then((name) => {
-    return res.json(name);
+    return res.status(200).json(name);
   });
 };
 
 const commentDel = async (req, res) => {
   const comment = await db.Comment.findOne({where:{id: req.params.id}})
   if(!comment){
-    return res.json({
+    return res.status(404).json({
       message: "esse comentário não existe!",
     });
   }
@@ -53,7 +53,7 @@ const commentDel = async (req, res) => {
       id: comment.id,
     },
   }).then(() => {
-    res.json({
+    res.status(200).json({
       message: "comentário apagado",
     });
   });

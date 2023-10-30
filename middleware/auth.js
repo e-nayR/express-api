@@ -6,7 +6,7 @@ module.exports = {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      return res.json({
+      return res.status(401).json({
         message: "Error! Entre com seu token para ter acesso",
       });
     }
@@ -14,7 +14,7 @@ module.exports = {
     const [, token] = authHeader.split(" "); // token puro
     //console.log(token)
     if (!token) {
-      return res.json({
+      return res.status(401).json({
         message: "Error! Aqui não querido",
       });
     }
@@ -24,7 +24,7 @@ module.exports = {
       req.userId = decode.id;
       return next();
     } catch (err) {
-      return res.json({
+      return res.status(401).json({
         mesage: "Error! Token inválido..",
       });
     }

@@ -1,8 +1,9 @@
 var express = require("express");
-const {getAll, createUser, updateName, detailUser, deleteUser, login, forgetPass, newPass} = require("../src/controllers/users")
+const {getAll, createUser, updateName, detailUser, deleteUser} = require("../src/controllers/users")
 const router = express.Router();
 const {middlewareAuth} = require("../middleware/auth");
 const { myComments, commentDel } = require("../src/controllers/comments");
+const { login, forgetPass, newPass } = require("../src/controllers/auth");
 
 
 // CRUD Routes /users
