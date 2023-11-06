@@ -8,22 +8,25 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Task.hasMany(models.Comment,{
-        foreignKey:'task_id'
-      })
+      Task.hasMany(models.Comment, {
+        foreignKey: "task_id",
+      });
     }
   }
   Task.init(
     {
       title: DataTypes.STRING,
-      finished: DataTypes.BOOLEAN,
+      finished:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       userId: DataTypes.INTEGER,
     },
     {
       sequelize,
       modelName: "Task",
-    }
+    },
   );
-  
-  return Task
-}
+
+  return Task;
+};

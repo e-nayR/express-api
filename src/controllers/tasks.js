@@ -4,7 +4,7 @@ const db = require("../models/index");
 const createTask = async (req, res) => {
   const body = req.body;
   body.userId = req.userId;
-
+  
   await db.Task.create(body)
     .then(() => {
       return res.status(201).json({

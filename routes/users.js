@@ -11,7 +11,7 @@ router.post('/', createUser);
 router.get('/', middlewareAuth , getAll); 
 router.put('/user',middlewareAuth, updateName);
 router.get('/user', middlewareAuth, detailUser);
-router.delete('/delete',middlewareAuth , deleteUser);
+router.delete('/user',middlewareAuth , deleteUser);
 router.post('/login', login);
 router.post('/user/forget-password',forgetPass);
 router.put('/user/new-password',newPass);

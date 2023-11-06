@@ -1,7 +1,5 @@
 //requisições
 const db = require("../models/index");
-const mailer = require("../../mailtrap/mailer");
-const randomStr = require("crypto");
 
 // list all users
 const getAll = async (req, res) => {
@@ -9,10 +7,10 @@ const getAll = async (req, res) => {
     attributes: ["id", "name"],
   })
     .then((list) => {
-      res.status(200).json(list);
+      res.status(200).send(list);
     })
     .catch((err) => {
-      res.status(503).json(err);
+      res.status(503).send(err);
     });
 };
 
@@ -20,17 +18,32 @@ const getAll = async (req, res) => {
 const createUser = async (req, res) => {
   const body = req.body;
 
-  await db.User.create(body)
-    .then((result) => {
-      console.log("Created User");
-      res.status(201).json({
-        message: "Novo user criado com sucesso!",
-        user: result.name,
-      });
-    })
-    .catch((err) => {
-      res.status(422).json(err);
+  if (body.name || body.email || body.password == null) {
+    return res.status(400).json({
+      message: "Nenhum dos campos pode ser vazio!",
     });
+  }
+
+  const email = await db.User.findOne({
+    where: {
+      email: body.email,
+    },
+  });
+
+  if (!email) {
+    await db.User.create(body)
+      .then((result) => {
+        console.log("Created User");
+        res.status(201).json({
+          message: "Novo user criado com sucesso!",
+          user: result.name,
+        });
+      })
+      .catch((err) => {
+        res.status(422).json(err);
+      });
+  }
+  return res.status(409); // email já cadastrado
 };
 
 // update username
@@ -109,5 +122,5 @@ module.exports = {
   createUser,
   updateName,
   detailUser,
-  deleteUser
+  deleteUser,
 };

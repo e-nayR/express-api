@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const db = require("../models/index");
 
 const commentAdd = async (req, res) => {
@@ -5,13 +6,22 @@ const commentAdd = async (req, res) => {
   const task_id = req.params.id;
   const body = req.body.comment;
 
+  if(body == null){
+    res.status(400).json({
+      message:"O título da task não pode ser vazio"
+    })
+  }
+
   await db.Comment.create({
     comment: body,
     user_id,
     task_id,
-  });
-
-  return res.status(201).json({ message: "comentário adicionado!" });
+  }).then(()=>{
+    res.status(201).json({ message: "comentário adicionado!" });
+  })
+  .catch((err)=>{
+    res.status(405).json(err)
+  })
 };
 
 const commentShow = async (req, res) => {
@@ -35,7 +45,7 @@ const myComments = async (req, res) => {
     where: {
       user_id: req.userId,
     },
-    attributes: ["id","comment"],
+    attributes: ["id","comment"]
   }).then((name) => {
     return res.status(200).json(name);
   });

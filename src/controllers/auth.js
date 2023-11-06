@@ -1,6 +1,8 @@
 const db = require("../models/index");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const mailer = require("../../mailtrap/mailer");
+const randomStr = require("crypto");
 
 const login = async (req, res) => {
   const email = req.body.email;
@@ -44,52 +46,49 @@ const login = async (req, res) => {
 const forgetPass = async (req, res) => {
   const email = req.body.email;
   // return res.send(email)
-  try {
-    const user = await db.User.findOne({
-      where: { email: email },
-    });
-    if (!user) {
-      return res.status(404).send({ error: "user not found" });
-    }
-    //return res.send(user)
 
-    const token = randomStr.randomBytes(6).toString("hex");
-    const date = new Date();
-    //date.setHours(date.getHours() + 1);
-    date.setMinutes(date.getMinutes() + 30);
-
-    await db.User.update(
-      {
-        recovery_key: token,
-        timeExpireKey: date,
-      },
-      {
-        where: {
-          id: user.id,
-        },
-      }
-    );
-
-    mailer.sendMail(
-      {
-        to: "ryane.feitosa@catskillet.com",
-        from: "ryane.feitosa@catskillet.com",
-        template: "../mailtrap/mail/forget-password",
-        context: { token },
-      },
-      (err) => {
-        if (err) {
-          res.status(400).json({ message: "temos um problema..." });
-        }
-        res.status(200).json({
-          message:
-            "Caso, esse email esteja cadastrado, enviaremos o código de redefinição",
-        });
-      }
-    );
-  } catch {
-    res.status(406).send({ error: "try again" });
+  const user = await db.User.findOne({
+    where: { email: email },
+  });
+  if (!user) {
+    return res.status(404).send({ error: "user not found" });
   }
+  //return res.send(user)
+
+  const token = randomStr.randomBytes(6).toString("hex");
+  const date = new Date();
+  //date.setHours(date.getHours() + 1);
+  date.setMinutes(date.getMinutes() + 30);
+
+  await db.User.update(
+    {
+      recovery_key: token,
+      timeExpireKey: date,
+    },
+    {
+      where: {
+        id: user.id,
+      },
+    }
+  );
+
+  mailer.sendMail(
+    {
+      to: "ryane.feitosa@catskillet.com",
+      from: "ryane.feitosa@catskillet.com",
+      template: "../mailtrap/mail/forget-password",
+      context: { token },
+    },
+    (err) => {
+      if (err) {
+        res.status(400).json({ message: "temos um problema..." });
+      }
+      res.status(200).json({
+        message:
+          "Caso, esse email esteja cadastrado, enviaremos o código de redefinição",
+      });
+    }
+  );
 };
 
 /*usar o token para alterar a senha*/
@@ -134,7 +133,7 @@ const newPass = async (req, res) => {
   }
 };
 module.exports = {
-    login,
-    forgetPass,
-    newPass
+  login,
+  forgetPass,
+  newPass,
 };
