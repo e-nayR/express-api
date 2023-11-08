@@ -7,7 +7,7 @@ const commentAdd = async (req, res) => {
   const body = req.body.comment;
 
   if(body == null){
-    res.status(400).json({
+    res.status(500).json({
       message:"O título da task não pode ser vazio"
     })
   }

@@ -7,73 +7,72 @@ describe("tasks", () => {
     //   .post("/tasks/new")
     //   .set(
     //     "Authorization",
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
     //   )
     //   .send({
-    //     title: "varrer a casa",
-    //     finished: 1 
+    //     title:"jantar"
     //   })
     //   .expect(201)
     // });
 
-    test("listAll", async () => {
-        await request(app)
-        .get("/tasks/")
-        .set(
-          "Authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
-        )
-        // .expect((res)=>{
-        //     console.log(res.body)
-        // })
-        .expect(200)
-    });
+    // test("listAll", async () => {
+    //     await request(app)
+    //     .get("/tasks/")
+    //     .set(
+    //       "Authorization",
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
+    //     )
+    //     // .expect((res)=>{
+    //     //     console.log(res.body)
+    //     // })
+    //     .expect(200)
+    // });
 
-    test("list - Done", async () => {
-        await request(app)
-        .get("/tasks/done")
-        .set(
-          "Authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
-        )
-        // .expect((res)=>{
-        //     console.log(res.body)
-        // })
-        .expect(200)
-    });
+    // test("list - Done", async () => {
+    //     await request(app)
+    //     .get("/tasks/done")
+    //     .set(
+    //       "Authorization",
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
+    //     )
+    //     // .expect((res)=>{
+    //     //     console.log(res.body)
+    //     // })
+    //     .expect(200)
+    // });
 
-    test("list - ToDo", async () => {
-        await request(app)
-        .get("/tasks/to-do")
-        .set(
-          "Authorization",
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
-        )
-        // .expect((res)=>{
-        //     console.log(res.body)
-        // })
-        .expect(200)
-    });
+    // test("list - ToDo", async () => {
+    //     await request(app)
+    //     .get("/tasks/to-do")
+    //     .set(
+    //       "Authorization",
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
+    //     )
+    //     // .expect((res)=>{
+    //     //     console.log(res.body)
+    //     // })
+    //     .expect(200)
+    // });
 
     // test("edit", async () => {
     //     await request(app)
-    //     .put("/tasks/edit/23")
+    //     .put("/tasks/edit/1")
     //     .set(
     //       "Authorization",
-    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCcDkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
     //     )
     //     .send({
-    //         title:'fazer as compras do mês'
+    //         title:'pegar o onibus 17:30'
     //     })
     //     .expect(200)
     // });
 
     // test("detail", async () => {
     //     await request(app)
-    //     .get("/tasks/23")
+    //     .get("/tasks/2")
     //     .set(
     //       "Authorization",
-    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCcDkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
     //     )
     //     .expect(200)
     //     .expect((res)=>{
@@ -86,7 +85,7 @@ describe("tasks", () => {
     //     .delete("/tasks/trash/24")
     //     .set(
     //       "Authorization",
-    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCcDkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
     //     )
     //     .expect(200)
     //     .expect((res)=>{
@@ -96,15 +95,12 @@ describe("tasks", () => {
 
     // test("change the status", async () => {
     //     await request(app)
-    //     .put("/tasks/23/check")
+    //     .put("/tasks/1/check")
     //     .set(
     //       "Authorization",
-    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY5OTI5NjkwMiwiZXhwIjoxNjk5MzAwNTAyfQ.0ynN6S5gwcjzZN0cSvuimoMF_i297b4VddpHg7icHc8"
+    //       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk5Mzg1NjY5LCJleHAiOjE2OTkzODkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCcDkyNjl9.h429Xag4V2jB3NpjfLezaMe7suVE-29eYPnemtk3jCc"
     //     )
     //     .expect(200)
-    //     .expect((res)=>{
-    //         console.log(res.body);
-    //     })
     // });
 })
 

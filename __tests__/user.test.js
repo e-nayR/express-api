@@ -4,14 +4,13 @@ const app = require("../app");
 describe("users", () => {
   // test("create", async () => {
   //   const res = await request(app).post("/").send({
-  //     name: "",
-  //     email: "@gmail.com",
+  //     name: "ryane",
+  //     email: "ane@gmail.com",
   //     password: "123",
   //   });
-  //   console.log(res.body)
   //   expect(res.statusCode).toBe(201);
   // });
-  
+
   // test("listAll", async () => {
   //   const res = await request(app)
   //     .get("/")
@@ -30,16 +29,13 @@ describe("users", () => {
   //       "Authorization",
   //       "Bearer ")
   //     .expect(200)
-  //     .expect(function (res) {
-  //       console.log(res.body); 
-  //     });
   // });
 
   // test("update", async () => {
   //   const res = await request(app)
   //     .put("/user")
   //     .send({
-  //       name: "",
+  //       name: "Ryane",
   //     })
   //     .set(
   //       "Authorization",
@@ -56,12 +52,12 @@ describe("users", () => {
   //       "Bearer ")
   //     .expect(200)
   //     .expect(function (res) {
-  //       console.log(res.body); 
+  //       console.log(res.body);
   //     });
   // });
 });
 
-describe('recuperar senha', ()=>{
+describe("recuperar senha", () => {
   //   test("forgot-pass", async () => {
   //     await request(app)
   //       .post("/user/forget-password")
@@ -69,21 +65,18 @@ describe('recuperar senha', ()=>{
   //         email: "mandy@gmail.com"
   //       })
   //       .expect(function (res) {
-  //         console.log(res.body); 
+  //         console.log(res.body);
   //       })
   //       .expect(200)
   //   });
-  
-    // test("new-pass", async () => {
-    //   await request(app)
-    //     .put("/user/new-password")
-    //     .send({
-    //       email: "mandy@gmail.com",
-    //       token: "2108b7521db",
-    //       password: "123",
-    //     })
-    //     .expect(200)
-    // });
-  })
-
-
+  // test("new-pass", async () => {
+  //   await request(app)
+  //     .put("/user/new-password")
+  //     .send({
+  //       email: "mandy@gmail.com",
+  //       token: "2108b7521db",
+  //       password: "123",
+  //     })
+  //     .expect(200)
+  // });
+});

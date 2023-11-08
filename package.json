@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx nodemon app.js",
-    "test": "jest --coverage"
-  },
+    "build": "npx nodemon app.js --ignore __tests__",
+    "pretest": "SET NODE_ENV=test & sequelize db:migrate",
+    "test": "SET NODE_ENV=test & jest --coverage"
+    },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -19,6 +20,7 @@
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.33.0",
+    "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
   },
   "devDependencies": {

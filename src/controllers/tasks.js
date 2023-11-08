@@ -4,7 +4,11 @@ const db = require("../models/index");
 const createTask = async (req, res) => {
   const body = req.body;
   body.userId = req.userId;
-  
+
+  if(!body.title){
+    return res.status(400).json({message:"Para uma task ser criada é preciso ter o campo title"})
+  }
+
   await db.Task.create(body)
     .then(() => {
       return res.status(201).json({
@@ -12,7 +16,7 @@ const createTask = async (req, res) => {
       });
     })
     .catch((err) => {
-      return res.status(401).json({
+      return res.status(500).json({
         message: err,
       });
     });
@@ -25,14 +29,14 @@ const listTask = async (req, res) => {
       userId: req.userId,
     },
     attributes: ["id", "title", "finished", "createdAt"],
-    include:{
+    include: {
       model: db.Comment,
-      attributes:['comment']
-    }
+      attributes: ["comment"],
+    },
   });
-  
+
   return res.status(200).json({
-    My_Tasks: list
+    My_Tasks: list,
   });
 };
 
@@ -67,12 +71,12 @@ const finishFalse = async (req, res) => {
 // edit the task
 const editTask = async (req, res) => {
   const params = req.params.id;
-  const body = req.body
+  const body = req.body;
   await db.Task.update(body, {
     where: {
       id: params,
       userId: req.userId,
-    }
+    },
   })
     .then(() => {
       return res.status(200).json({
@@ -88,28 +92,29 @@ const editTask = async (req, res) => {
 
 // get a especific task
 const detailTask = async (req, res) => {
-  const params = req.params.id;
+  const task = await db.Task.findByPk(req.params.id);
 
-  await db.Task.findOne({
-    where: {
-      id: params,
-      userId: req.userId,
-    },
-    include:{
-      model: db.Comment,
-      attributes:['comment']
-    }
-  })
-    .then((find) => {
-      return res.status(200).json({
-        message: find,
-      });
+  if (!task) {
+    return res.status(404).json({ message: "task" + task + " não existe" });
+  }
+
+  try {
+    const detail = await db.Task.findOne({
+      where: {
+        id: task.id,
+        userId: req.userId,
+      },
+      include: {
+        model: db.Comment,
+        attributes: ["comment"],
+      },
     })
-    .catch((err) => {
-      return res.status(404).json({
-        error: "Task not found",
-      });
+    return res.status(200).json({detail});
+  } catch (error) {
+    return res.status(404).json({
+      error: "Task not found",
     });
+  }
 };
 
 // delete a task
@@ -155,7 +160,7 @@ const changeStatus = async (req, res) => {
       },
       attributes: ["finished"],
     });
-    
+
     if (answer.finished == false) {
       const status = true;
       answer.finished = status;
@@ -163,7 +168,7 @@ const changeStatus = async (req, res) => {
       const status = false;
       answer.finished = status;
     }
-  
+
     await db.Task.update(
       { finished: answer.finished },
       {
@@ -183,9 +188,8 @@ const changeStatus = async (req, res) => {
         });
       });
   } catch (error) {
-    res.status(401).send(error)
+    res.status(400).send(error);
   }
-  
 };
 
 module.exports = {
